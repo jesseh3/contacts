@@ -21,4 +21,22 @@ describe('Request Utility', () => {
 
     expect(parsed).to.deep.equal(expected);
   });
+
+  it('should error if body cannot be parsed', () => {
+    const body = `{"id": "1", "name": "John Doe"`; // bad json string
+    const parseJson = parseWith(null);
+
+    const parserCall = () => parseJson(body);
+
+    expect(parserCall).to.throw('Missing a parser.');
+  });
+
+  it('should error if body is not defined', () => {
+    const body = null;
+    const parseJson = parseWith(JSON.parse);
+
+    const parserCall = () => parseJson(body);
+
+    expect(parserCall).to.throw('Missing text.');
+  });
 });
