@@ -1,11 +1,5 @@
-const { parseWith } = require('../src/utils/request.util');
+const { parseWith } = require('../../src/utils/request.util');
 const expect = require('chai').expect;
-
-
-
-const mockJSON = {
-  parse: (text) => null
-};
 
 describe('Request Utility', () => {
   it('should parse the body', () => {
