@@ -28,19 +28,19 @@ describe('Response Utility', () => {
 
   it('should not return a body if there is none', () => {
     const statusCode = 200;
-    const ok = withStatusCode(200);
-    const data = null;
+    const ok = withStatusCode(200, JSON.stringify);
+    const data = {one: 'uno', "two": 2};
     const actual = ok(data);
-    expected = { statusCode: 200 };
+    expected = { statusCode: 200, body: JSON.stringify(data) };
     expect(actual).to.deep.equal(expected);
   });
-  //
-  // it('should error if body is not defined', () => {
-  //   const body = null;
-  //   const parseJson = parseWith(JSON.parse);
-  //
-  //   const parserCall = () => parseJson(body);
-  //
-  //   expect(parserCall).to.throw('Missing text.');
-  // });
+
+  it('should be able to format data', () => {
+    const statusCode = 200;
+    const ok = withStatusCode(200);
+    const data = 'foo';
+    const actual = ok(data);
+    expected = { statusCode: 200, body: 'foo' };
+    expect(actual).to.deep.equal(expected);
+  });
 });
