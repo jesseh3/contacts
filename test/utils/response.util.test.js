@@ -4,9 +4,13 @@ const expect = require('chai').expect;
 describe('Response Utility', () => {
 
   it('should throw error for bad status code', () => {
-    const statusCode = 42;
-    const badCall = () => withStatusCode(statusCode);
-    expect(badCall).to.throw('status code out of range');
+    const lowStatus = 1;
+    const highStatus = 600;
+    const badCallLow = () => withStatusCode(lowStatus);
+    const badCallHigh = () => withStatusCode(highStatus);
+
+    expect(badCallLow).to.throw('status code out of range');
+    expect(badCallHigh).to.throw('status code out of range');
   });
 
   it('should return status code as part of a response object', () => {
@@ -17,14 +21,6 @@ describe('Response Utility', () => {
     expect(actual).to.deep.equal(expected);
   });
 
-  it('should return data as the body of a response object', () => {
-    const statusCode = 200;
-    const ok = withStatusCode(200);
-    const data = 'foo';
-    const actual = ok(data);
-    expected = { statusCode: 200, body: 'foo' };
-    expect(actual).to.deep.equal(expected);
-  });
 
   it('should not return a body if there is none', () => {
     const statusCode = 200;
@@ -36,6 +32,15 @@ describe('Response Utility', () => {
   });
 
   it('should be able to format data', () => {
+    const statusCode = 200;
+    const ok = withStatusCode(200);
+    const data = 'foo';
+    const actual = ok(data);
+    expected = { statusCode: 200, body: 'foo' };
+    expect(actual).to.deep.equal(expected);
+  });
+
+  it('should not format data if no formater provided', () => {
     const statusCode = 200;
     const ok = withStatusCode(200);
     const data = 'foo';
