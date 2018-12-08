@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha $(find test -name '*.js')"
+    "test": "mocha $(find -name '*.test.js' -type f -not -path './node_modules/*')"
   },
   "author": "",
   "license": "ISC",
