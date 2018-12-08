@@ -65,4 +65,49 @@ describe('Contacts Repository', () => {
     expect(emptyResults).to.be.empty;
   });
 
+  it('should throw an error when listing fails', async () => {
+
+  });
+
+  it('should get a contact by id', async () => {
+    const expectedResult = {
+      Item: Object.assign({}, mockContacts[0])
+    };
+
+    const dockClientStub = sinon.stub(mockDocClient, 'get');
+    dockClientStub.onCall(0).returns(createAwsRequest(expectedResult));
+
+    const id = '2'
+    const awsParams = {
+      TableName: 'contacts',
+      Key: { id }
+    };
+
+    const contact = await respository.get(id);
+
+    expect(contact).to.equal(expectedResult.Item);
+    sinon.assert.calledWith(dockClientStub, awsParams)
+  });
+
+  it('should put a new item in the db', async () => {
+    const expectedResult = Object.assign({}, mockContacts[1]);
+
+    const dockClientStub = sinon.stub(mockDocClient, 'put');
+    dockClientStub.onCall(0).returns(createAwsRequest({Item: expectedResult}));
+
+    const awsParams = {
+      TableName: 'contacts',
+      Item: expectedResult,
+    };
+
+    const contact = await respository.put(expectedResult);
+
+    expect(contact).to.equal(expectedResult);
+    sinon.assert.calledWith(dockClientStub, awsParams)
+  });
+
+  it('should delete a contact by id', async () => {
+
+  });
+
 });
