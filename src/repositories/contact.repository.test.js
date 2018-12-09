@@ -66,7 +66,15 @@ describe('Contacts Repository', () => {
   });
 
   it('should throw an error when listing fails', async () => {
+    const dockClientStub = sinon.stub(mockDocClient, 'scan');
+    dockClientStub.onCall(0).returns(createAwsRequest(null, false));
 
+    try {
+      const results = await respository.list();
+    } catch(err) {
+      expect(err).to.exist;
+      expect(err.message).to.equal('error');
+    }
   });
 
   it('should get a contact by id', async () => {
@@ -103,11 +111,23 @@ describe('Contacts Repository', () => {
     const contact = await respository.put(expectedResult);
 
     expect(contact).to.equal(expectedResult);
-    sinon.assert.calledWith(dockClientStub, awsParams)
+    sinon.assert.calledWith(dockClientStub, awsParams);
   });
 
   it('should delete a contact by id', async () => {
+    const contact = Object.assign({}, mockContacts[1]);
 
+    const dockClientStub = sinon.stub(mockDocClient, 'delete');
+    dockClientStub.onCall(0).returns(createAwsRequest({Key: contact.id}));
+
+    const awsParams = {
+      TableName: 'contacts',
+      Key: {id: contact.id},
+    };
+
+    const id = await respository.delete(contact.id);
+    expect(id).to.equal(contact.id);
+    sinon.assert.calledWith(dockClientStub, awsParams);
   });
 
 });
